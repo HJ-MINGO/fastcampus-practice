@@ -22,14 +22,29 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    /**
+     * "OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader 
+     *  classes because bootstrap classpath has been appended"
+     * 원인: Java 8 이상의 버전에서 나타나는 Class Data Sharing(CDS) 관련 경고 메시지에 대한
+     * 설명과 이를 비활성화하는 옵션에 대해 설명이며  IntelliJ 내부에서 자바를 사용할 때 발생하는 단순 내부 경고 이다
+     *
+     * 경고 문구 해결법 : jvmArgs '-Xshare:off' 설정
+     * */
+    jvmArgs '-Xshare:off'
 }
+
+//compileJava {
+//    inputs.file(processResources)
+//}
