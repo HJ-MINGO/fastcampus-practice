@@ -1,5 +1,8 @@
 package com.fastcampus.example.fastcampuspractice;
 
+import com.fastcampus.example.fastcampuspractice.exec1.MemberConfig;
+import com.fastcampus.example.fastcampuspractice.exec1.MemberDto;
+import com.fastcampus.example.fastcampuspractice.exec1.ServiceInterFace;
 import com.fastcampus.example.fastcampuspractice.properties.MyProperties;
 import jakarta.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +29,7 @@ public class FastcampusPracticeApplication {
     private final String name;
     private final Environment environment;
     private final ApplicationContext applicationContext;
+    private final ServiceInterFace serviceInterFace;
 //    private final MyProperties myProperties;
 
 
@@ -33,10 +37,12 @@ public class FastcampusPracticeApplication {
             @Value("${mingo.name}") String name
             , Environment environment
             , ApplicationContext applicationContext
-            , MyProperties myProperties) {
+            , MyProperties myProperties
+            , MemberConfig memberConfig) {
         this.name = name;
         this.environment = environment;
         this.applicationContext = applicationContext;
+        this.serviceInterFace = memberConfig.memberService();
 //        this.myProperties = myProperties;
     }
 
@@ -54,7 +60,16 @@ public class FastcampusPracticeApplication {
     * */
     @EventListener(ApplicationReadyEvent.class)
     public void init2(){
-
+        MemberDto memberDto = new MemberDto();
+        serviceInterFace.saveMember(memberDto);
+        // 인메모리에 그냥 저장되어있다. 저장하는 방법은 Concurrent HashMap이다.
+        // 내부적으로 HashMap을 이용해서 데이터저장..
+        // SpringAPPLICATION이 살아있을 동안만 유효한 값
+        System.out.println(serviceInterFace.getMember(1L));
+        System.out.println(serviceInterFace.getMember(1L));
+        System.out.println(serviceInterFace.getMember(1L));
+        System.out.println(serviceInterFace.getMember(1L));
+        System.out.println(serviceInterFace.getMember(1L));
     }
 
 
